@@ -1,21 +1,17 @@
 <script setup>
 import { Icon } from '@iconify/vue';
-
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 
-import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const modules = ref([Autoplay, Navigation, Pagination]);
-const baseUrl = import.meta.url
 const url = useRequestURL()
-const baseURL = url.origin
+const baseUrl = url.origin
 
 
 const importImage = (url) => {
-  const image = new URL(url, baseURL);
+  const image = new URL(url, baseUrl);
   return image.href;
 }
 
@@ -207,34 +203,36 @@ const roomImages = computed(() => {
           >
             <div class="row">
               <div class="col-12 col-lg-7">
-                <swiper
-                  :modules="modules"
-                  :slides-per-view="1"
-                  navigation
-                  :pagination="{ clickable: true }"
-                  :autoplay="{
-                    delay: 2500,
-                    disableOnInteraction: false,
-                  }"
-                >
-                  <swiper-slide
-                    v-for="(num, index) in 5"
-                    :key="index"
+                <client-only>
+                  <swiper
+                    :modules="modules"
+                    :slides-per-view="1"
+                    navigation
+                    :pagination="{ clickable: true }"
+                    :autoplay="{
+                      delay: 2500,
+                      disableOnInteraction: false,
+                    }"
                   >
-                    <picture>
-                      <source
-                        :srcset="roomImages.roomB[num].desktop"
-                        media="(min-width: 768px)"
-                      >
-                      <img
-                        class="w-100 object-fit-cover"
-                        :src="roomImages.roomB[num].mobile"
-                        loading="lazy"
-                        :alt="`room-b-${num}`"
-                      >
-                    </picture>
-                  </swiper-slide>
-                </swiper>
+                    <swiper-slide
+                      v-for="(num, index) in 5"
+                      :key="index"
+                    >
+                      <picture>
+                        <source
+                          :srcset="roomImages.roomB[num].desktop"
+                          media="(min-width: 768px)"
+                        >
+                        <img
+                          class="w-100 object-fit-cover"
+                          :src="roomImages.roomB[num].mobile"
+                          loading="lazy"
+                          :alt="`room-b-${num}`"
+                        >
+                      </picture>
+                    </swiper-slide>
+                  </swiper>
+                </client-only>
               </div>
               <div class="col-12 col-lg-5">
                 <div class="card-body pe-md-10 py-md-10">

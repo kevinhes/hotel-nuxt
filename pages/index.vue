@@ -1,12 +1,10 @@
 <script setup>
 import { Icon } from '@iconify/vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 const modules = [Autoplay, Navigation, Pagination];
 
 
 const heroSwiperSlides = ref(Array.from({ length:5 }))
-import 'swiper/css';
 
 const roomSwiper = ref(null);
 const slidePrev = () => {
@@ -211,34 +209,36 @@ const slideNext = () => {
     <!-- room inftro -->
     <section class="room-intro position-relative px-3 py-20 px-md-0 py-md-30 bg-neutral-120">
       <div class="d-flex flex-column flex-md-row justify-content-center align-items-center justify-content-md-start align-items-md-end gap-6 gap-md-20">
-        <Swiper
-          ref="roomSwiper"
-          :modules="modules"
-          :slides-per-view="1"
-          :pagination="true"
-          :autoplay="{
-            delay: 5000,
-            disableOnInteraction: false,
-          }"
-          :loop="true"
-        >
-          <swiper-slide
-            v-for="(num, index) in 5"
-            :key="index"
+        <client-only>
+          <Swiper
+            ref="roomSwiper"
+            :modules="modules"
+            :slides-per-view="1"
+            :pagination="true"
+            :autoplay="{
+              delay: 5000,
+              disableOnInteraction: false,
+            }"
+            :loop="true"
           >
-            <picture>
-              <source
-                srcset="/images/home-room-1.png"
-                media="(min-width:768px)"
-              >
-              <img
-                class="w-100"
-                src="/images/home-room-sm-1.png"
-                alt="room-a"
-              >
-            </picture>
-          </swiper-slide>
-        </Swiper>
+            <swiper-slide
+              v-for="(num, index) in 5"
+              :key="index"
+            >
+              <picture>
+                <source
+                  srcset="/images/home-room-1.png"
+                  media="(min-width:768px)"
+                >
+                <img
+                  class="w-100"
+                  src="/images/home-room-sm-1.png"
+                  alt="room-a"
+                >
+              </picture>
+            </swiper-slide>
+          </Swiper>
+        </client-only>
         
         <div class="room-intro-content text-neutral-0">
           <h2 class="mb-2 mb-md-4 fw-bold">
