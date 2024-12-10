@@ -1,8 +1,10 @@
 <script setup>
 import DatePickerModal from '~/components/Rooms/DatePickerModal.vue';
 const route = useRoute()
+const router = useRouter()
 const roomId = route.params.roomId
 import { Icon } from '@iconify/vue';
+const runtimeConfig = useRuntimeConfig()
 
 const datePickerModal = ref(null);
 
@@ -42,6 +44,28 @@ const handleDateChange = (bookingInfo) => {
   bookingPeople.value = bookingInfo?.people || 1;
   daysCount.value = bookingInfo.daysCount;
 }
+
+// 房間細節
+const roomsStore = useRoomsStore()
+const apiUrl = runtimeConfig.public.apiBase
+const { roomDetail } = storeToRefs(roomsStore)
+const { setRoomDetail } = roomsStore
+// const { data } = await useFetch( `${apiUrl}api/v1/rooms/` )
+const { data, error } = await useAsyncData(`rooms-list`, async () => {
+  const response = await $fetch(`api/v1/rooms/${roomId}`, {
+    baseURL: apiUrl,
+  });
+  // console.log(response.value);
+  setRoomDetail(response.result)
+  return response
+});
+
+if (error.value) {
+  alert("發生錯誤 ! ");
+  router.push("/");
+}
+console.log(roomDetail);
+
 </script>
 
 <template>
@@ -54,7 +78,7 @@ const handleDateChange = (bookingInfo) => {
           <div style="width: 52.5vw;">
             <img
               class="w-100"
-              src="/images/room-a-1.png"
+              :src="roomDetail.imageUrl"
               alt="room-a-1"
             >
           </div>
@@ -65,24 +89,24 @@ const handleDateChange = (bookingInfo) => {
             <div class="d-flex gap-md-2">
               <img
                 class="w-50"
-                src="/images/room-a-2.png"
+                :src="roomDetail.imageUrlList[0]"
                 alt="room-a-2"
               >
               <img
                 class="w-50"
-                src="/images/room-a-3.png"
+                :src="roomDetail.imageUrlList[1]"
                 alt="room-a-3"
               >
             </div>
             <div class="d-flex gap-md-2">
               <img
                 class="w-50"
-                src="/images/room-a-4.png"
+                :src="roomDetail.imageUrlList[2]"
                 alt="room-a-4"
               >
               <img
                 class="w-50"
-                src="/images/room-a-5.png"
+                :src="roomDetail.imageUrlList[3]"
                 alt="room-a-5"
               >
             </div>

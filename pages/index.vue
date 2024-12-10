@@ -3,6 +3,7 @@ import { Icon } from '@iconify/vue';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 const modules = [Autoplay, Navigation, Pagination];
 
+const runtimeConfig = useRuntimeConfig()
 
 const heroSwiperSlides = ref(Array.from({ length:5 }))
 
@@ -14,6 +15,27 @@ const slidePrev = () => {
 const slideNext = () => {
   roomSwiper.value.$el.swiper.slideNext();
 }
+
+// 房間細節
+const roomsStore = useRoomsStore()
+const apiUrl = runtimeConfig.public.apiBase
+const { roomDetail } = storeToRefs(roomsStore)
+const { setRoomDetail } = roomsStore
+// const { data } = await useFetch( `${apiUrl}api/v1/rooms/` )
+const { data, error } = await useAsyncData(`rooms-list`, async () => {
+  const response = await $fetch(`api/v1/rooms/66b0909bafe4327b9a563797`, {
+    baseURL: apiUrl,
+  });
+  // console.log(response.value);
+  setRoomDetail(response.result)
+  return response
+});
+
+if (error.value) {
+  alert("發生錯誤 ! ");
+  router.push("/");
+}
+
 
 </script>
 
@@ -222,17 +244,17 @@ const slideNext = () => {
             :loop="true"
           >
             <swiper-slide
-              v-for="(num, index) in 5"
-              :key="index"
+              v-for="imageUrl in roomDetail.imageUrlList"
+              :key="imageUrl"
             >
               <picture>
                 <source
-                  srcset="/images/home-room-1.png"
+                  :srcset="imageUrl"
                   media="(min-width:768px)"
                 >
                 <img
                   class="w-100"
-                  src="/images/home-room-sm-1.png"
+                  :src="imageUrl"
                   alt="room-a"
                 >
               </picture>
@@ -242,16 +264,16 @@ const slideNext = () => {
         
         <div class="room-intro-content text-neutral-0">
           <h2 class="mb-2 mb-md-4 fw-bold">
-            尊爵雙人房
+            {{ roomDetail.name }}
           </h2>
           <p class="mb-6 mb-md-10 fs-8 fs-md-7">
-            享受高級的住宿體驗，尊爵雙人房提供給您舒適寬敞的空間和精緻的裝潢。
+            {{ roomDetail.description }}
           </p>
           <div class="mb-6 mb-md-10 fs-3 fw-bold">
-            NT$ 10,000
+            NT$ {{ roomDetail.price }}
           </div>
           <NuxtLink
-            to="/rooms"
+            :to="`/rooms/${roomDetail._id}`"
             class="btn btn-neutral-0 d-flex justify-content-end align-items-center gap-3 w-100 p-5 p-md-10 mb-6 mb-md-10 text-end text-neutral-100 fs-7 fs-md-5 fw-bold border-0"
           >
             查看更多
