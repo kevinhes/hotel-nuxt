@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useRoomsStore = defineStore('roomStore', () => {
+export const useRoomsStore = defineStore('roomsStore', () => {
   const roomsList = ref([])
   const roomDetail = ref({})
 

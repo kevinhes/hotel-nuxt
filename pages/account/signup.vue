@@ -2,8 +2,41 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Icon } from '@iconify/vue';
+const runtimeConfig = useRuntimeConfig()
+
 
 const isEmailAndPasswordValid = ref(false);
+
+const apiUrl = runtimeConfig.public.apiBase
+
+const userSignupInfo = ref({
+  "name": "kevinhes",
+  "email": "kevinhes@example.com",
+  "password": "1qaz2wsx",
+  "phone": "(663) 742-3828",
+  "birthday": "1982/2/4",
+  "address": {
+    "zipcode": 802,
+    "detail": "文山路23號"
+  }
+})
+
+async function signup() {
+  try {
+    const res = await $fetch(`${apiUrl}api/v1/user/signup`, {
+      method: 'POST',
+      body: {
+        ...userSignupInfo.value
+      }
+    })
+    console.log(res);
+  } catch(error) {
+    console.log(error.data);
+    
+  }
+}
+
+signup()
 </script>
 
 <template>

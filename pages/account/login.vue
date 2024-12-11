@@ -1,5 +1,22 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+const runtimeConfig = useRuntimeConfig()
+const apiUrl = runtimeConfig.public.apiBase
+
+async function login() {
+  const res = await $fetch(`${apiUrl}api/v1/user/login`, {
+    method: 'POST',
+    body: {
+      "email": "kevinhes@example.com",
+      "password": "1qaz2wsx"
+    }
+  })
+  console.log(res);
+  
+}
+
+login()
+
 </script>
 
 <template>
