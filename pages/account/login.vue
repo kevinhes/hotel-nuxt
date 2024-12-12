@@ -1,21 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-const runtimeConfig = useRuntimeConfig()
-const apiUrl = runtimeConfig.public.apiBase
 
-async function login() {
-  const res = await $fetch(`${apiUrl}api/v1/user/login`, {
-    method: 'POST',
-    body: {
-      "email": "kevinhes@example.com",
-      "password": "1qaz2wsx"
-    }
-  })
-  console.log(res);
-  
-}
-
-login()
+const authStore = useAuthStore()
+const { userInfo } = storeToRefs(authStore)
+const { login } = authStore
 
 </script>
 
@@ -30,7 +18,7 @@ login()
       </h1>
     </div>
 
-    <form class="mb-10">
+    <form class="mb-10" @submit.prevent="login">
       <div class="mb-4 fs-8 fs-md-7">
         <label
           class="mb-2 text-neutral-0 fw-bold"
@@ -41,9 +29,9 @@ login()
         <input
           id="email"
           class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
-          value="jessica@sample.com"
           placeholder="請輸入信箱"
           type="email"
+          v-model="userInfo.email"
         >
       </div>
       <div class="mb-4 fs-8 fs-md-7">
@@ -56,9 +44,9 @@ login()
         <input
           id="password"
           class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
-          value="jessica@sample.com"
           placeholder="請輸入密碼"
           type="password"
+          v-model="userInfo.password"
         >
       </div>
       <div class="d-flex justify-content-between align-items-center mb-10 fs-8 fs-md-7">
@@ -85,7 +73,7 @@ login()
       </div>
       <button
         class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold"
-        type="button"
+        type="submit"
       >
         會員登入
       </button>

@@ -22,6 +22,12 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 })
 
+const authStore = useAuthStore()
+const { isLogin,userProfile } = storeToRefs( authStore )
+
+// console.log(userProfile.value);
+
+
 </script>
 
 <template>
@@ -78,7 +84,7 @@ onUnmounted(() => {
                 客房旅宿
               </NuxtLink>
             </li>
-            <li class="d-none d-md-block nav-item">
+            <li class="nav-item" v-if="isLogin">
               <div class="btn-group">
                 <button
                   type="button"
@@ -89,7 +95,7 @@ onUnmounted(() => {
                     class="fs-5"
                     icon="mdi:account-circle-outline"
                   />
-                  Jessica
+                  {{ userProfile.name }}
                 </button>
                 <ul
                   class="dropdown-menu py-3 overflow-hidden"
@@ -98,7 +104,7 @@ onUnmounted(() => {
                   <li>
                     <NuxtLink
                       class="dropdown-item px-6 py-4"
-                      to="/user/jessica/profile"
+                      :to="`/user/jessica/profile`"
                     >
                       我的帳戶
                     </NuxtLink>
@@ -112,9 +118,9 @@ onUnmounted(() => {
                 </ul>
               </div>
             </li>
-            <li class="d-md-none nav-item">
+            <li class="nav-item" v-else>
               <NuxtLink
-                to="/"
+                to="/account/login"
                 class="nav-link p-4 text-neutral-0"
               >
                 會員登入

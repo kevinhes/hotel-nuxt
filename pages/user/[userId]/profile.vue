@@ -3,6 +3,9 @@ import { ref } from 'vue';
 
 const isEditPassword = ref(false);
 const isEditProfile = ref(false);
+
+const authStore = useAuthStore()
+const { userProfile } = storeToRefs( authStore )
 </script>
 
 <template>
@@ -19,7 +22,9 @@ const isEditProfile = ref(false);
             </p>
             <span
               class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
-            >Jessica@exsample.com</span>
+            >
+              {{ userProfile.email }}
+            </span>
           </div>
 
           <div
@@ -121,7 +126,7 @@ const isEditProfile = ref(false);
               class="form-control text-neutral-100 fw-bold"
               :class="{'pe-none p-0 border-0': !isEditProfile, 'p-4': isEditProfile}"
               type="text"
-              value="Jessica Ｗang"
+              v-model="userProfile.name"
             >
           </div>
 
@@ -140,6 +145,7 @@ const isEditProfile = ref(false);
               :class="{'pe-none p-0 border-0': !isEditProfile, 'p-4': isEditProfile}"
               type="tel"
               value="+886 912 345 678"
+              v-model="userProfile.phone"
             >
           </div>
 
