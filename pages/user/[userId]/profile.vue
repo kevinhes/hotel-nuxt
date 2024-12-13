@@ -1,11 +1,56 @@
 <script setup>
 import { ref } from 'vue';
+import dayjs from 'dayjs';
 
 const isEditPassword = ref(false);
 const isEditProfile = ref(false);
 
 const authStore = useAuthStore()
 const { userProfile } = storeToRefs( authStore )
+const { updateUserProfile } = authStore
+const updateDate = ref({
+  year: '',
+  month: '',
+  day: ''
+})
+const updateFormatDate = computed(() => {
+  const combinedDate = `${updateDate.value.year}/${updateDate.value.month}/${updateDate.value.day}`
+  return combinedDate
+})
+
+const updateAddress = ref('')
+const oldPassword = ref('')
+const newPassword = ref('')
+
+const userUpdateProfile = computed(() => {
+  return {
+    "userId": userProfile.value._id,
+    "name": userProfile.value.name,
+    "phone": userProfile.value.phone,
+    "birthday": updateFormatDate.value,
+    "address": {
+      "zipcode": userProfile.value.address?.zipcode,
+      "detail": updateAddress.value
+    },
+    "oldPassword": oldPassword.value,
+    "newPassword": newPassword.value
+  }
+})
+
+const userBirthday =  computed(() => {
+  if (userProfile?.value.birthday) {
+    return dayjs(userProfile.value.birthday).format('YYYY年M月D日')
+  }
+  return '' // 或是返回其他預設值
+})
+
+const editUserProfile = () => {
+  updateAddress.value = userProfile.value.address.detail
+  isEditPassword.value = true 
+  isEditProfile.value = true
+}
+
+
 </script>
 
 <template>
@@ -29,7 +74,7 @@ const { userProfile } = storeToRefs( authStore )
 
           <div
             class="d-flex justify-content-between align-items-center"
-            :class="{'d-none': isEditPassword}"
+            :class="{'d-none': isEditPassword || isEditProfile }"
           >
             <div>
               <label class="mb-0 text-neutral-80 fs-8 fs-md-7 fw-medium">
@@ -45,7 +90,7 @@ const { userProfile } = storeToRefs( authStore )
             <button
               class="flex-shrink-0 text-primary-100 fs-8 fs-md-7 fw-bold text-decoration-underline border-0 bg-transparent"
               type="button"
-              @click="isEditPassword = !isEditPassword"
+              @click="editUserProfile"
             >
               重設
             </button>
@@ -53,7 +98,7 @@ const { userProfile } = storeToRefs( authStore )
 
           <div
             class="d-flex flex-column gap-4 gap-md-6"
-            :class="{'d-none': !isEditPassword}"
+            :class="{'d-none': !isEditPassword && !isEditProfile}"
           >
             <div>
               <label
@@ -65,6 +110,7 @@ const { userProfile } = storeToRefs( authStore )
                 type="password"
                 class="form-control p-4 fs-7 rounded-3"
                 placeholder="請輸入舊密碼"
+                v-model="oldPassword"
               >
             </div>
 
@@ -78,6 +124,7 @@ const { userProfile } = storeToRefs( authStore )
                 type="password"
                 class="form-control p-4 fs-7 rounded-3"
                 placeholder="請輸入新密碼"
+                v-model="newPassword"
               >
             </div>
 
@@ -96,9 +143,10 @@ const { userProfile } = storeToRefs( authStore )
           </div>
 
           <button
-            :class="{'d-none': !isEditPassword}"
+            :class="{'d-none': !isEditPassword && !isEditProfile}"
             class="btn btn-neutral-40 align-self-md-start px-8 py-4 text-neutral-60 rounded-3"
             type="button"
+            @click="userUpdateProfile(userUpdateProfile)"
           >
             儲存設定
           </button>
@@ -144,7 +192,6 @@ const { userProfile } = storeToRefs( authStore )
               class="form-control text-neutral-100 fw-bold"
               :class="{'pe-none p-0 border-0': !isEditProfile, 'p-4': isEditProfile}"
               type="tel"
-              value="+886 912 345 678"
               v-model="userProfile.phone"
             >
           </div>
@@ -160,7 +207,7 @@ const { userProfile } = storeToRefs( authStore )
             <span
               class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
               :class="{'d-none': isEditProfile}"
-            >1990 年 8 月 15 日</span>
+            >{{ userBirthday }}</span>
             <div
               class="d-flex gap-2"
               :class="{'d-none': !isEditProfile}"
@@ -168,33 +215,36 @@ const { userProfile } = storeToRefs( authStore )
               <select
                 id="birth"
                 class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                v-model="updateDate.year"
               >
                 <option
                   v-for="year in 65"
                   :key="year"
-                  value="`${year + 1958} 年`"
+                  :value="`${year + 1958}`"
                 >
                   {{ year + 1958 }} 年
                 </option>
               </select>
               <select
                 class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                v-model="updateDate.month"
               >
                 <option
                   v-for="month in 12"
                   :key="month"
-                  value="`${month} 月`"
+                  :value="`${month}`"
                 >
                   {{ month }} 月
                 </option>
               </select>
               <select
                 class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+                v-model="updateDate.day"
               >
                 <option
                   v-for="day in 30"
                   :key="day"
-                  value="`${day} 日`"
+                  :value="`${day}`"
                 >
                   {{ day }} 日
                 </option>
@@ -213,7 +263,9 @@ const { userProfile } = storeToRefs( authStore )
             <span
               class="form-control pe-none p-0 text-neutral-100 fw-bold border-0"
               :class="{'d-none': isEditProfile}"
-            >高雄市新興區六角路 123 號</span>
+            >
+              {{ userProfile.address?.detail }}
+            </span>
             <div :class="{'d-none': !isEditProfile}">
               <div
                 class="d-flex gap-2 mb-2"
@@ -256,6 +308,7 @@ const { userProfile } = storeToRefs( authStore )
                 type="text"
                 class="form-control p-4 rounded-3"
                 placeholder="請輸入詳細地址"
+                v-model="updateAddress"
               >
             </div>
           </div>
@@ -264,7 +317,7 @@ const { userProfile } = storeToRefs( authStore )
           :class="{'d-none': isEditProfile}"
           class="btn btn-outline-primary-100 align-self-start px-8 py-4 rounded-3"
           type="button"
-          @click="isEditProfile = !isEditProfile"
+          @click="editUserProfile"
         >
           編輯
         </button>
@@ -273,6 +326,7 @@ const { userProfile } = storeToRefs( authStore )
           :class="{'d-none': !isEditProfile}"
           class="btn btn-neutral-40 align-self-md-start px-8 py-4 text-neutral-60 rounded-3"
           type="button"
+          @click="updateUserProfile(userUpdateProfile)"
         >
           儲存設定
         </button>

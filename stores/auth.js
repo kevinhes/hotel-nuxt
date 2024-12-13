@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useCookie, useRuntimeConfig, useRequestHeaders } from "#app";
+import { useCookie, useRuntimeConfig } from "#app";
 
 export const useAuthStore = defineStore( 'authStore', () => {
   // global setting
@@ -21,8 +21,6 @@ export const useAuthStore = defineStore( 'authStore', () => {
       }
     })
     authCookie.value = (res.token)
-    console.log(cookie.value);
-    
   }
 
   // check login
@@ -39,8 +37,10 @@ export const useAuthStore = defineStore( 'authStore', () => {
     })
     if( res.status === true ) {
       isLogin.value = true
+      getUserProfile()
+    } else {
+      navigateTo('/account/login')
     }
-    getUserProfile()
     
   }
   // get user profile
@@ -53,8 +53,27 @@ export const useAuthStore = defineStore( 'authStore', () => {
       }
     })
     userProfile.value = res.result
-    console.log(userProfile.value);
-    
+  }
+
+  // update user
+  async function updateUserProfile(userUpdateProfile) {
+    try {
+      const res = await $fetch(`${apiUrl}api/v1/user/`, {
+        method: 'PUT',
+        headers: {
+          authorization:authCookie.value
+        },
+        body: {
+          ...userUpdateProfile
+        }
+      })
+      console.log(res);
+      if(res.status === true) {
+        getUserProfile()
+      }
+    } catch(error) {
+      console.log(error.data);
+    }
   }
 
   return {
@@ -64,5 +83,6 @@ export const useAuthStore = defineStore( 'authStore', () => {
     checkIsLogin,
     setIsLogin,
     userProfile,
+    updateUserProfile
   }
 } )

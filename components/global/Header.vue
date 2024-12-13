@@ -1,12 +1,10 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 
-
 const route = useRoute();
 const transparentBgRoute = ['home', 'rooms'];
 
 const isTransparentRoute = computed(() => transparentBgRoute.includes(route.name));
-
 
 const isScrolled = ref(false);
 
@@ -24,8 +22,6 @@ onUnmounted(() => {
 
 const authStore = useAuthStore()
 const { isLogin,userProfile } = storeToRefs( authStore )
-
-// console.log(userProfile.value);
 
 
 </script>
@@ -104,7 +100,7 @@ const { isLogin,userProfile } = storeToRefs( authStore )
                   <li>
                     <NuxtLink
                       class="dropdown-item px-6 py-4"
-                      :to="`/user/jessica/profile`"
+                      :to="`/user/${ userProfile.name }/profile`"
                     >
                       我的帳戶
                     </NuxtLink>
