@@ -1,8 +1,12 @@
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { Icon } from '@iconify/vue';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-const modules = [Autoplay, Navigation, Pagination];
 
+const modules = [Autoplay, Navigation, Pagination];
 const runtimeConfig = useRuntimeConfig();
 const apiUrl = runtimeConfig.public.apiBase;
 
@@ -36,20 +40,22 @@ if (newsListError.value) {
 
 // 房間細節
 const roomsStore = useRoomsStore()
-const { roomDetail } = storeToRefs(roomsStore)
-const { setRoomDetail } = roomsStore
+const { roomList } = storeToRefs(roomsStore)
+const { setRoomsList } = roomsStore
 const { data, error } = await useAsyncData(`rooms-list`, async () => {
-  const response = await $fetch(`api/v1/rooms/66b0909bafe4327b9a563797`, {
+  const response = await $fetch(`api/v1/rooms`, {
     baseURL: apiUrl,
   });
   // console.log(response.value);
-  setRoomDetail(response.result)
+  setRoomsList(response.result)
   return response
 });
 
 if (error.value) {
-  alert("發生錯誤 ! ");
-  router.push("/");
+  console.log(error.value);
+  
+  // alert("發生錯誤 ! ");
+  // router.push("/");
 }
 
 // 美味佳餚
@@ -208,7 +214,7 @@ if (culinaryListError.value) {
       </div>
     </section>
     <!-- room inftro -->
-    <section class="room-intro position-relative px-3 py-20 px-md-0 py-md-30 bg-neutral-120">
+    <!-- <section class="room-intro position-relative px-3 py-20 px-md-0 py-md-30 bg-neutral-120">
       <div class="d-flex flex-column flex-md-row justify-content-center align-items-center justify-content-md-start align-items-md-end gap-6 gap-md-20">
         <client-only>
           <Swiper
@@ -284,7 +290,7 @@ if (culinaryListError.value) {
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
     <!-- delicacy -->
     <section class="delicacy position-relative py-20 py-md-30 bg-primary-10">
       <div class="container">

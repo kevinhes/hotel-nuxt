@@ -1,5 +1,8 @@
 <script setup>
 // import { RouterLink, RouterView } from 'vue-router';
+definePageMeta({
+  middleware:'auth'
+})
 const route = useRoute()
 console.log(route);
 

@@ -24,7 +24,6 @@ const confirmBooking = () => {
     router.push(`/rooms/${roomId}/booking/confirmation`)
   }, 1500);
 }
-console.log(route);
 
 </script>
 

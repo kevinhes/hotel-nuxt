@@ -2,41 +2,40 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Icon } from '@iconify/vue';
-const runtimeConfig = useRuntimeConfig()
+const authStore = useAuthStore()
+const { signup } = authStore
 
 
 const isEmailAndPasswordValid = ref(false);
 
-const apiUrl = runtimeConfig.public.apiBase
+const signupDate = ref({
+  year: '',
+  month: '',
+  day: ''
+})
+
+const signupFormatDate = computed(() => {
+  const combinedDate = `${signupDate.value.year}/${signupDate.value.month}/${signupDate.value.day}`
+  return combinedDate
+})
+
+watch(signupFormatDate, (newDate) => {
+  userSignupInfo.value.birthday = newDate;
+})
+
 
 const userSignupInfo = ref({
-  "name": "kevinhes",
-  "email": "kevinhes@example.com",
-  "password": "1qaz2wsx",
-  "phone": "(663) 742-3828",
-  "birthday": "1982/2/4",
+  "name": "",
+  "email": "",
+  "password": "",
+  "phone": "",
+  "birthday": signupFormatDate.value,
   "address": {
     "zipcode": 802,
-    "detail": "文山路23號"
+    "detail": ""
   }
 })
 
-async function signup() {
-  try {
-    const res = await $fetch(`${apiUrl}api/v1/user/signup`, {
-      method: 'POST',
-      body: {
-        ...userSignupInfo.value
-      }
-    })
-    console.log(res);
-  } catch(error) {
-    console.log(error.data);
-    
-  }
-}
-
-signup()
 </script>
 
 <template>
@@ -44,6 +43,7 @@ signup()
     <div class="mb-10">
       <p class="mb-2 text-primary-100 fs-8 fs-md-7 fw-bold">
         享樂酒店，誠摯歡迎
+        {{ signupFormatDate }}
       </p>
       <h1 class="mb-4 text-neutral-0 fw-bold">
         立即註冊
@@ -103,6 +103,7 @@ signup()
             class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
             placeholder="hello@exsample.com"
             type="email"
+            v-model="userSignupInfo.email"
           >
         </div>
         <div class="mb-4 fs-8 fs-md-7">
@@ -117,6 +118,7 @@ signup()
             class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
             placeholder="請輸入密碼"
             type="password"
+            v-model="userSignupInfo.password"
           >
         </div>
         <div class="mb-10 fs-8 fs-md-7">
@@ -157,6 +159,7 @@ signup()
             class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
             placeholder="請輸入姓名"
             type="text"
+            v-model="userSignupInfo.name"
           >
         </div>
         <div class="mb-4 fs-8 fs-md-7">
@@ -171,6 +174,7 @@ signup()
             class="form-control p-4 text-neutral-100 fw-medium border-neutral-40  rounded-3"
             placeholder="請輸入手機號碼"
             type="tel"
+            v-model="userSignupInfo.phone"
           >
         </div>
         <div class="mb-4 fs-8 fs-md-7">
@@ -186,33 +190,36 @@ signup()
             <select
               id="birth"
               class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+              v-model="signupDate.year"
             >
               <option
                 v-for="year in 65"
                 :key="year"
-                value="`${year + 1958} 年`"
+                :value="`${year + 1958}`"
               >
                 {{ year + 1958 }} 年
               </option>
             </select>
             <select
               class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+              v-model="signupDate.month"
             >
               <option
                 v-for="month in 12"
                 :key="month"
-                value="`${month} 月`"
+                :value="month"
               >
                 {{ month }} 月
               </option>
             </select>
             <select
               class="form-select p-4 text-neutral-80 fw-medium rounded-3"
+              v-model="signupDate.day"
             >
               <option
                 v-for="day in 30"
                 :key="day"
-                value="`${day} 日`"
+                :value="day"
               >
                 {{ day }} 日
               </option>
@@ -268,6 +275,7 @@ signup()
               type="text"
               class="form-control p-4 rounded-3"
               placeholder="請輸入詳細地址"
+              v-model="userSignupInfo.address.detail"
             >
           </div>
         </div>
@@ -289,6 +297,7 @@ signup()
         <button
           class="btn btn-primary-100 w-100 py-4 text-neutral-0 fw-bold"
           type="button"
+          @click="signup(userSignupInfo)"
         >
           完成註冊
         </button>

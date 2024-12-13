@@ -1,13 +1,31 @@
 import { defineStore } from "pinia";
-import { useCookie, useRuntimeConfig } from "#app";
+import { useCookie, useRuntimeConfig, useRouter } from "#app";
 
 export const useAuthStore = defineStore( 'authStore', () => {
   // global setting
   const runtimeConfig = useRuntimeConfig()
   const apiUrl = runtimeConfig.public.apiBase
+  const router = useRouter()
+  const authCookie = useCookie('auth')
+  // signup
+  async function signup(userSignupInfo) {
+    try {
+      const res = await $fetch(`${apiUrl}api/v1/user/signup`, {
+        method: 'POST',
+        body: {
+          ...userSignupInfo
+        }
+      })
+      console.log(res);
+      authCookie.value = res.token
+      router.push(`/account/${res.result.name}/profile`)
+    } catch(error) {
+      console.log(error.data);
+      
+    }
+  }
 
   // login
-  const authCookie = useCookie('auth')
   const userInfo = ref({
     email:'',
     password: ''
@@ -21,27 +39,29 @@ export const useAuthStore = defineStore( 'authStore', () => {
       }
     })
     authCookie.value = (res.token)
+    router.push(`/user/${res.result.name}/profile`)
   }
 
   // check login
   const isLogin = ref(false);
-  const setIsLogin = ( boolean ) => {
-    isLogin.value = boolean
-  }
   async function checkIsLogin() {
-    const res = await $fetch(`${apiUrl}api/v1/user/check`, {
-      method: 'GET',
-      headers: {
-        authorization:authCookie.value
+    if ( isLogin.value === false ) {
+      try {
+        const res = await $fetch(`${apiUrl}api/v1/user/check`, {
+          method: 'GET',
+          headers: {
+            authorization:authCookie.value
+          }
+        })
+        if( res.status === true ) {
+          isLogin.value = true
+          getUserProfile()
+        }
+      } catch (error) {
+        console.log(error.data);
+        navigateTo('/')
       }
-    })
-    if( res.status === true ) {
-      isLogin.value = true
-      getUserProfile()
-    } else {
-      navigateTo('/account/login')
     }
-    
   }
   // get user profile
   const userProfile = ref({})
@@ -67,7 +87,6 @@ export const useAuthStore = defineStore( 'authStore', () => {
           ...userUpdateProfile
         }
       })
-      console.log(res);
       if(res.status === true) {
         getUserProfile()
       }
@@ -81,8 +100,8 @@ export const useAuthStore = defineStore( 'authStore', () => {
     login,
     isLogin,
     checkIsLogin,
-    setIsLogin,
     userProfile,
-    updateUserProfile
+    updateUserProfile,
+    signup
   }
 } )
