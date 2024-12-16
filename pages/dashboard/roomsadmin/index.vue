@@ -3,8 +3,12 @@
   const apiUrl = runtimeConfig.public.apiBase;
   const authCookie = useCookie('auth')
   const roomsList = ref([]);
+  import {useLoading} from 'vue-loading-overlay'
+  const $loading = useLoading({});
+    
 
   async function getRoomsList() {
+    const loader = $loading.show({})
     try {
       const response = await $fetch('api/v1/admin/rooms/', {
         baseURL:apiUrl,
@@ -17,6 +21,8 @@
       
     } catch (error) {
       console.log(error.data);
+    } finally {
+      loader.hide()
     }
   }
 

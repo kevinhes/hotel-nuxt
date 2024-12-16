@@ -1,11 +1,16 @@
 <script setup>
   const runtimeConfig = useRuntimeConfig();
   const apiUrl = runtimeConfig.public.apiBase;
-  const authCookie = useCookie('auth')
+  const authCookie = useCookie('auth');
+
+  import {useLoading} from 'vue-loading-overlay'
+  const $loading = useLoading({});
+  
 
   const newsList = ref([])
 
   async function getNewsList() {
+    const loader = $loading.show({})
     try {
       const response = await $fetch('api/v1/admin/news/', {
         baseURL:apiUrl,
@@ -13,11 +18,14 @@
           authorization:authCookie.value
         }
       })
-      console.log(response);
-      newsList.value = response.result
+      if ( response.status === true ) {
+        newsList.value = response.result;
+      }
       
     } catch (error) {
       console.log(error.data);
+    } finally {
+      loader.hide()
     }
   }
 
@@ -64,6 +72,12 @@
   })
 </script>
 <template>
+  <client-only>
+    <loading
+      :active="isLoading"
+      :is-full-page="fullPage"
+    />
+  </client-only>
   <section class="d-flex justify-content-between">
     <h1>
       管理新聞

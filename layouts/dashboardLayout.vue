@@ -1,7 +1,7 @@
 <script setup>
 </script>
 <template>
-  <header class="position-fixed w-10 bg-success top-0 start-0 vh-100 p-3">
+  <header class="position-fixed w-20 bg-warning top-0 start-0 vh-100 p-3">
     <nav class="d-flex flex-column h-100 justify-content-between">
       <div class="d-flex flex-column">
         <nuxt-link to="/dashboard">回到首頁</nuxt-link>
@@ -13,9 +13,17 @@
       </div>
     </nav>
   </header>
-  <main class="ms-auto w-90 p-3">
+  <main class="ms-auto w-80 p-3">
     <slot/>
   </main>
   
 </template>
-<style scoped></style>
+<style scoped lang="scss">
+  a {
+    text-decoration: none;
+    font-size: 20px;
+    &:hover {
+      color: red;
+    }
+  }
+</style>
