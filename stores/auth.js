@@ -32,19 +32,26 @@ export const useAuthStore = defineStore( 'authStore', () => {
   })
 
   async function login() {
-    const res = await $fetch(`${apiUrl}api/v1/user/login`, {
-      method: 'POST',
-      body: {
-        ...userInfo.value
-      }
-    })
-    authCookie.value = (res.token)
-    router.push(`/user/${res.result.name}/profile`)
+    try {
+      const res = await $fetch(`${apiUrl}api/v1/user/login`, {
+        method: 'POST',
+        body: {
+          ...userInfo.value
+        }
+      })
+      
+      authCookie.value = (res.token)
+      console.log(authCookie.value);
+      router.push(`/user/${res.result.name}/profile`)
+    } catch(error) {
+      alert(error.data.message)
+    }
   }
 
   // check login
   const isLogin = ref(false);
   async function checkIsLogin() {
+    console.log(authCookie.value);  
     if ( isLogin.value === false ) {
       try {
         const res = await $fetch(`${apiUrl}api/v1/user/check`, {

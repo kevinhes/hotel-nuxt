@@ -2,7 +2,6 @@
   const runtimeConfig = useRuntimeConfig();
   const apiUrl = runtimeConfig.public.apiBase;
   const authCookie = useCookie('auth')
-  const router = useRouter()
 
   const newsList = ref([])
 
