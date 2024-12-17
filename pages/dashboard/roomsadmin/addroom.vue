@@ -3,6 +3,9 @@
   const apiUrl = runtimeConfig.public.apiBase;
   const authCookie = useCookie('auth')
   const router = useRouter()
+  import {useLoading} from 'vue-loading-overlay'
+  const $loading = useLoading({});
+
   const roomInfo = ref({
     name: '',
     description: '',

@@ -72,12 +72,6 @@
   })
 </script>
 <template>
-  <client-only>
-    <loading
-      :active="isLoading"
-      :is-full-page="fullPage"
-    />
-  </client-only>
   <section class="d-flex justify-content-between">
     <h1>
       管理新聞

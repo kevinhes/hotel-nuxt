@@ -1,53 +1,80 @@
 <script setup>
-  const runtimeConfig = useRuntimeConfig();
-  const apiUrl = runtimeConfig.public.apiBase;
-  const authCookie = useCookie('auth')
-  const router = useRouter()
-  const newsInfo = ref({
-    "title": "",
-    "description": "",
-    "image": ""
-  })
+import { useRouter } from 'vue-router';
+import { useCookie, useRuntimeConfig } from '#app';
+import {useLoading} from 'vue-loading-overlay'
+const $loading = useLoading({});
 
-  async function addNews(newsInfo) {
-    try {
-      const response = await $fetch('api/v1/admin/news/', {
-        method: 'POST',
-        baseURL:apiUrl,
-        headers: {
-          authorization:authCookie.value
-        },
-        body: {
-          ...newsInfo
-        }
-      })
-      console.log(response);
-      if ( response.status === true ) {
-        router.push('/dashboard/newsadmin')
-      }
-    } catch (error) {
-      console.log(error);
+const runtimeConfig = useRuntimeConfig();
+const apiUrl = runtimeConfig.public.apiBase;
+const authCookie = useCookie('auth');
+const router = useRouter();
+
+// 新增新聞的功能
+const addNews = async (values) => {
+  const loader = $loading.show()
+  try {
+    const response = await $fetch('api/v1/admin/news/', {
+      method: 'POST',
+      baseURL: apiUrl,
+      headers: {
+        authorization: authCookie.value,
+      },
+      body: {
+        ...values,
+      },
+    });
+
+    if (response.status === true) {
+      router.push('/dashboard/newsadmin');
     }
+  } catch (error) {
+    console.error(error.data);
+  } finally {
+    loader.hide()
   }
+};
 </script>
+
 <template>
   <h1>新增</h1>
-  <div>
-    <label for="">title</label>
-    <input class="form-control" type="text" v-model="newsInfo.title">
-  </div>
-  <div>
-    <label for="">description</label>
-    <textarea class="form-control" name="" id="" v-model="newsInfo.description"></textarea>
-  </div>
-  <div>
-    <label for="">image url</label>
-    <input class="form-control" type="text" v-model="newsInfo.image">
-  </div>
-  <div>
-    <button type="button" class="btn btn-primary" @click="addNews(newsInfo)">
-      新增
-    </button>
-  </div>
+  <VForm @submit="addNews">
+    <div>
+      <label for="title">Title</label>
+      <VField
+        id="title"
+        name="title"
+        rules="required"
+        class="form-control"
+      />
+      <VErrorMessage name="title" class="text-danger" />
+    </div>
+    <div>
+      <label for="description">Description</label>
+      <VField
+        id="description"
+        name="description"
+        rules="required"
+        as="textarea"
+        class="form-control"
+      />
+      <VErrorMessage name="description" class="text-danger" />
+    </div>
+    <div>
+      <label for="image">Image URL</label>
+      <VField
+        id="image"
+        name="image"
+        rules="required"
+        class="form-control"
+      />
+      <VErrorMessage name="image" class="text-danger" />
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary">
+        新增
+      </button>
+    </div>
+  </VForm>
 </template>
+
 <style scoped></style>
