@@ -7,6 +7,7 @@
         <nuxt-link to="/dashboard">回到首頁</nuxt-link>
         <nuxt-link to="/dashboard/newsadmin">最新消息</nuxt-link>
         <nuxt-link to="/dashboard/roomsadmin">房型管理</nuxt-link>
+        <nuxt-link to="/dashboard/culinaryadmin">佳餚管理</nuxt-link>
       </div>
       <div>
         <nuxt-link to="/">回到前台</nuxt-link>
