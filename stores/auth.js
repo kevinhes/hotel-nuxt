@@ -7,6 +7,9 @@ export const useAuthStore = defineStore( 'authStore', () => {
   const apiUrl = runtimeConfig.public.apiBase
   const router = useRouter()
   const authCookie = useCookie('auth')
+
+  const isLogin = ref(false);
+  const userProfile = ref({})
   // signup
   async function signup(userSignupInfo) {
     try {
@@ -17,6 +20,7 @@ export const useAuthStore = defineStore( 'authStore', () => {
         }
       })
       console.log(res);
+      isLogin.value = true
       authCookie.value = res.token
       router.push(`/account/${res.result.name}/profile`)
     } catch(error) {
@@ -49,37 +53,39 @@ export const useAuthStore = defineStore( 'authStore', () => {
   }
 
   // check login
-  const isLogin = ref(false);
   async function checkIsLogin() {
     console.log(authCookie.value);  
-    if ( isLogin.value === false ) {
-      try {
-        const res = await $fetch(`${apiUrl}api/v1/user/check`, {
-          method: 'GET',
-          headers: {
-            authorization:authCookie.value
-          }
-        })
-        if( res.status === true ) {
-          isLogin.value = true
-          getUserProfile()
+    try {
+      const res = await $fetch(`${apiUrl}api/v1/user/check`, {
+        method: 'GET',
+        headers: {
+          authorization:authCookie.value
         }
-      } catch (error) {
-        console.log(error.data);
-        navigateTo('/')
+      })
+      if( res.status === true ) {
+        isLogin.value = true
+        // getUserProfile()
       }
+    } catch (error) {
+      console.log(error.data);
+      navigateTo('/account/login')
     }
   }
   // get user profile
-  const userProfile = ref({})
-  async function getUserProfile() {
-    const res = await $fetch(`${apiUrl}api/v1/user/`, {
-      method: 'GET',
-      headers: {
-        authorization:authCookie.value
-      }
-    })
-    userProfile.value = res.result
+  const getUserProfile = async () => {
+    try {
+      const res = await $fetch(`${apiUrl}api/v1/user/`, {
+        method: 'GET',
+        headers: {
+          authorization:authCookie.value
+        }
+      })
+      isLogin.value = true
+      userProfile.value = res.result
+
+    } catch(error) {
+      console.log(error.data);
+    }
   }
 
   // update user
@@ -109,6 +115,7 @@ export const useAuthStore = defineStore( 'authStore', () => {
     checkIsLogin,
     userProfile,
     updateUserProfile,
-    signup
+    signup,
+    getUserProfile
   }
 } )

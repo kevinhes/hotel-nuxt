@@ -8,33 +8,6 @@ import 'swiper/css/pagination';
 const store = useRoomsStore()
 
 const modules = ref([Autoplay, Navigation, Pagination]);
-const url = useRequestURL()
-const baseUrl = url.origin
-
-
-// const importImage = (url) => {
-//   const image = new URL(url, baseUrl);
-//   return image.href;
-// }
-
-// const roomImages = computed(() => {
-//   const rooms = ['a', 'b', 'c', 'd'];
-//   const nums = [1, 2, 3, 4, 5];
-
-//   const result = rooms.reduce((acc, roomId) => {
-//     acc[`room${roomId.toUpperCase()}`] = nums.reduce((obj, num) => {
-//       obj[num] = {
-//         desktop: importImage(`/images/room-${roomId}-${num}.png`),
-//         mobile: importImage(`/images/room-${roomId}-sm-${num}.png`)
-//       };
-//       return obj;
-//     }, {});
-
-//     return acc;
-//   }, {});
-
-//   return result;
-// })
 
 // 取得遠端資料
 const runtimeConfig = useRuntimeConfig()

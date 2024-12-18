@@ -1,5 +1,8 @@
 <script setup>
 import { Icon } from '@iconify/vue';
+const runtimeConfig = useRuntimeConfig()
+const apiUrl = runtimeConfig.public.apiBase
+const authCookie = useCookie('auth')
 
 const route = useRoute();
 const transparentBgRoute = ['home', 'rooms'];
@@ -22,7 +25,11 @@ onUnmounted(() => {
 
 const authStore = useAuthStore()
 const { isLogin,userProfile } = storeToRefs( authStore )
+const { getUserProfile } = authStore
 
+onMounted(()=> {
+  getUserProfile()
+})
 
 
 </script>

@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
 import { ref } from 'vue';
 import dayjs from 'dayjs';
 
@@ -7,7 +10,12 @@ const isEditProfile = ref(false);
 
 const authStore = useAuthStore()
 const { userProfile } = storeToRefs( authStore )
-const { updateUserProfile } = authStore
+const { updateUserProfile, getUserProfile } = authStore
+
+onMounted(()=> {
+  getUserProfile()
+})
+
 const updateDate = ref({
   year: '',
   month: '',
