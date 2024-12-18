@@ -1,7 +1,7 @@
 <script setup>
-definePageMeta({
-  middleware: 'auth'
-})
+// definePageMeta({
+//   middleware: 'auth'
+// })
 
 import { Icon } from '@iconify/vue';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';

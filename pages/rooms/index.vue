@@ -12,29 +12,29 @@ const url = useRequestURL()
 const baseUrl = url.origin
 
 
-const importImage = (url) => {
-  const image = new URL(url, baseUrl);
-  return image.href;
-}
+// const importImage = (url) => {
+//   const image = new URL(url, baseUrl);
+//   return image.href;
+// }
 
-const roomImages = computed(() => {
-  const rooms = ['a', 'b', 'c', 'd'];
-  const nums = [1, 2, 3, 4, 5];
+// const roomImages = computed(() => {
+//   const rooms = ['a', 'b', 'c', 'd'];
+//   const nums = [1, 2, 3, 4, 5];
 
-  const result = rooms.reduce((acc, roomId) => {
-    acc[`room${roomId.toUpperCase()}`] = nums.reduce((obj, num) => {
-      obj[num] = {
-        desktop: importImage(`/images/room-${roomId}-${num}.png`),
-        mobile: importImage(`/images/room-${roomId}-sm-${num}.png`)
-      };
-      return obj;
-    }, {});
+//   const result = rooms.reduce((acc, roomId) => {
+//     acc[`room${roomId.toUpperCase()}`] = nums.reduce((obj, num) => {
+//       obj[num] = {
+//         desktop: importImage(`/images/room-${roomId}-${num}.png`),
+//         mobile: importImage(`/images/room-${roomId}-sm-${num}.png`)
+//       };
+//       return obj;
+//     }, {});
 
-    return acc;
-  }, {});
+//     return acc;
+//   }, {});
 
-  return result;
-})
+//   return result;
+// })
 
 // 取得遠端資料
 const runtimeConfig = useRuntimeConfig()
