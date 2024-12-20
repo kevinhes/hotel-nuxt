@@ -6,6 +6,7 @@ const { $Swal } = useNuxtApp();
 const modules = [Autoplay, Navigation, Pagination];
 const runtimeConfig = useRuntimeConfig();
 const apiUrl = runtimeConfig.public.apiBase;
+console.log(apiUrl);
 
 const heroSwiperSlides = ref(Array.from({ length: 5 }));
 
