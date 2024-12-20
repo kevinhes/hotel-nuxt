@@ -11,6 +11,16 @@ export default defineNuxtPlugin((nuxtApp) => {
   defineRule("email", email);
   defineRule("min", min);
 
+  defineRule("confirmPassword", (value) => {
+    if (!value) {
+      return "Please confirm your password";
+    }
+    if (value !== password.value) {
+      return "密碼必須一致";
+    }
+    return true;
+  });
+
   defineRule("username", (value) => {
     const regex = /^[a-zA-Z0-9_]{3,15}$/;
     return (
@@ -27,10 +37,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   // 設定多國語系與驗證訊息
   configure({
     // 載入繁體中文的設定檔，產生繁體中文的驗證訊息
-    generateMessage: localize({ zh_TW: zhTW }), 
+    generateMessage: localize({ zh_TW: zhTW }),
     validateOnInput: true, // 輸入文字時立即進行驗證
   });
-  
+
   // 設定預設語言為繁體中文
   setLocale("zh_TW");
 });

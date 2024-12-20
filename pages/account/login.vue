@@ -1,10 +1,18 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink } from "vue-router";
 
-const authStore = useAuthStore()
-const { userInfo } = storeToRefs(authStore)
-const { login } = authStore
-
+const authStore = useAuthStore();
+const { isRemeberAccousnt, accountCookie } = storeToRefs(authStore);
+const { login } = authStore;
+const formRef = ref(null);
+const { setValues } = useForm();
+onMounted(() => {
+  if (accountCookie.value) {
+    formRef.value.setValues({
+      email: accountCookie.value,
+    });
+  }
+});
 </script>
 
 <template>
@@ -13,54 +21,49 @@ const { login } = authStore
       <p class="mb-2 text-primary-100 fs-8 fs-md-7 fw-bold">
         享樂酒店，誠摯歡迎
       </p>
-      <h1 class="text-neutral-0 fw-bold">
-        立即開始旅程
-      </h1>
+      <h1 class="text-neutral-0 fw-bold">立即開始旅程</h1>
     </div>
 
-    <form class="mb-10" @submit.prevent="login">
+    <VForm class="mb-10" @submit="login" ref="formRef">
       <div class="mb-4 fs-8 fs-md-7">
-        <label
-          class="mb-2 text-neutral-0 fw-bold"
-          for="email"
-        >
+        <label class="mb-2 text-neutral-0 fw-bold" for="email">
           電子信箱
         </label>
-        <input
+        <VField
           id="email"
+          name="email"
+          rules="required|email"
           class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
           placeholder="請輸入信箱"
           type="email"
-          v-model="userInfo.email"
-        >
+          ref="emailRef"
+        />
+        <VErrorMessage name="email" class="text-danger" />
       </div>
       <div class="mb-4 fs-8 fs-md-7">
-        <label
-          class="mb-2 text-neutral-0 fw-bold"
-          for="password"
-        >
-          密碼
-        </label>
-        <input
+        <label class="mb-2 text-neutral-0 fw-bold" for="password"> 密碼 </label>
+        <VField
           id="password"
+          name="password"
           class="form-control p-4 text-neutral-100 fw-medium border-neutral-40"
           placeholder="請輸入密碼"
+          rules="required|min: 8"
           type="password"
-          v-model="userInfo.password"
-        >
+        />
+        <VErrorMessage name="password" class="text-danger" />
       </div>
-      <div class="d-flex justify-content-between align-items-center mb-10 fs-8 fs-md-7">
+      <div
+        class="d-flex justify-content-between align-items-center mb-10 fs-8 fs-md-7"
+      >
         <div class="form-check d-flex align-items-end gap-2 text-neutral-0">
           <input
             id="remember"
             class="form-check-input"
             type="checkbox"
             value=""
-          >
-          <label
-            class="form-check-label fw-bold"
-            for="remember"
-          >
+            v-model="isRemeberAccousnt"
+          />
+          <label class="form-check-label fw-bold" for="remember">
             記住帳號
           </label>
         </div>
@@ -77,7 +80,7 @@ const { login } = authStore
       >
         會員登入
       </button>
-    </form>
+    </VForm>
 
     <p class="mb-0 fs-8 fs-md-7">
       <span class="me-2 text-neutral-0 fw-medium">沒有會員嗎？</span>
@@ -101,9 +104,8 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
-  xxxl: 1537px
+  xxxl: 1537px,
 );
-
 
 input[type="password"] {
   font: small-caption;
@@ -126,7 +128,7 @@ input::placeholder {
 }
 
 .form-check-input:checked {
-  background-color: #BF9D7D;
-  border-color: #BF9D7D;
+  background-color: #bf9d7d;
+  border-color: #bf9d7d;
 }
 </style>

@@ -1,28 +1,29 @@
 <script setup>
-import { Icon } from '@iconify/vue';
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Icon } from "@iconify/vue";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-const store = useRoomsStore()
-
+const store = useRoomsStore();
 const modules = ref([Autoplay, Navigation, Pagination]);
 
+// 千分位
+const { formatToThousand } = useThousand();
+
 // 取得遠端資料
-const runtimeConfig = useRuntimeConfig()
-const apiUrl = runtimeConfig.public.apiBase
-const { roomsList } = storeToRefs(store)
-const { setRoomsList } = store
+const runtimeConfig = useRuntimeConfig();
+const apiUrl = runtimeConfig.public.apiBase;
+const { roomsList } = storeToRefs(store);
+const { setRoomsList } = store;
 // const { data } = await useFetch( `${apiUrl}api/v1/rooms/` )
 const { data, error } = await useAsyncData(`rooms-list`, async () => {
   const response = await $fetch(`api/v1/rooms/`, {
     baseURL: apiUrl,
   });
-  // console.log(response.value);
-  setRoomsList(response.result)
-  
-  return response
+  setRoomsList(response.result);
+
+  return response;
 });
 
 if (error.value) {
@@ -31,9 +32,6 @@ if (error.value) {
 }
 
 // console.log(roomsList);
-
-
-
 </script>
 
 <template>
@@ -49,39 +47,34 @@ if (error.value) {
             disableOnInteraction: false,
           }"
         >
-          <swiper-slide
-            v-for="(num, index) in 5"
-            :key="index"
-          >
+          <swiper-slide v-for="(num, index) in 5" :key="index">
             <picture>
               <source
                 srcset="/images/home-hero.png"
                 media="(min-width:576px)"
-              >
+              />
               <img
                 class="hero-img"
                 src="/images/home-hero-sm.png"
                 alt="hero banner"
-              >
+              />
             </picture>
           </swiper-slide>
         </Swiper>
       </client-only>
-      <div class="hero-wrapper d-flex flex-column justify-content-center align-items-center flex-md-row gap-10 gap-md-20 w-100 position-absolute z-2">
-        <div class="d-flex flex-column align-items-center text-center d-md-block text-md-start">
+      <div
+        class="hero-wrapper d-flex flex-column justify-content-center align-items-center flex-md-row gap-10 gap-md-20 w-100 position-absolute z-2"
+      >
+        <div
+          class="d-flex flex-column align-items-center text-center d-md-block text-md-start"
+        >
           <div class="mt-10 mb-5 mt-md-0 mb-md-10 text-primary-100 fw-bold">
-            <h2 class="fw-semibold">
-              享樂酒店
-            </h2>
-            <h5 class="fs-7 fs-md-5 fw-semibold">
-              Enjoyment Luxury Hotel
-            </h5>
+            <h2 class="fw-semibold">享樂酒店</h2>
+            <h5 class="fs-7 fs-md-5 fw-semibold">Enjoyment Luxury Hotel</h5>
           </div>
           <div class="deco-line" />
         </div>
-        <h1 class="mb-0 text-neutral-0 fw-bold">
-          客房旅宿
-        </h1>
+        <h1 class="mb-0 text-neutral-0 fw-bold">客房旅宿</h1>
       </div>
     </section>
 
@@ -95,7 +88,8 @@ if (error.value) {
         </h2>
         <ul class="d-flex flex-column gap-6 gap-md-12 list-unstyled">
           <li
-            v-for=" room in roomsList " :key="room._id"
+            v-for="room in roomsList"
+            :key="room._id"
             class="card flex-lg-row border-0 rounded-3xl overflow-hidden"
           >
             <div class="row">
@@ -119,13 +113,13 @@ if (error.value) {
                         <source
                           :srcset="roomImage"
                           media="(min-width: 768px)"
-                        >
+                        />
                         <img
                           class="w-100 object-fit-cover"
                           :src="roomImage"
                           loading="lazy"
-                          :alt="`room-a-${room.description}`"
-                        >
+                          :alt="`room-${room.description}`"
+                        />
                       </picture>
                     </swiper-slide>
                   </swiper>
@@ -136,11 +130,15 @@ if (error.value) {
                   <h3 class="card-title fs-2 fw-bold text-neutral-100">
                     {{ room.name }}
                   </h3>
-                  <p class="card-text mb-6 mb-md-10 fs-8 fs-md-7 fw-medium text-neutral-80">
+                  <p
+                    class="card-text mb-6 mb-md-10 fs-8 fs-md-7 fw-medium text-neutral-80"
+                  >
                     {{ room.description }}
                   </p>
                   <ul class="d-flex gap-4 mb-6 mb-md-10 list-unstyled">
-                    <li class="card-info px-4 py-5 border border-primary-40 rounded-3">
+                    <li
+                      class="card-info px-4 py-5 border border-primary-40 rounded-3"
+                    >
                       <Icon
                         class="mb-2 fs-5 text-primary-100"
                         icon="fluent:slide-size-24-filled"
@@ -149,7 +147,9 @@ if (error.value) {
                         {{ room.areaInfo }}
                       </p>
                     </li>
-                    <li class="card-info px-4 py-5 border border-primary-40 rounded-3">
+                    <li
+                      class="card-info px-4 py-5 border border-primary-40 rounded-3"
+                    >
                       <Icon
                         class="mb-2 fs-5 text-primary-100"
                         icon="material-symbols:king-bed"
@@ -158,7 +158,9 @@ if (error.value) {
                         {{ room.bedInfo }}
                       </p>
                     </li>
-                    <li class="card-info px-4 py-5 border border-primary-40 rounded-3">
+                    <li
+                      class="card-info px-4 py-5 border border-primary-40 rounded-3"
+                    >
                       <Icon
                         class="mb-2 fs-5 text-primary-100"
                         icon="ic:baseline-person"
@@ -169,18 +171,17 @@ if (error.value) {
                     </li>
                   </ul>
                   <div class="deco-line w-100 mb-6 mb-md-10" />
-                  <div class="d-flex justify-content-between align-items-center fs-7 fs-md-5 text-primary-100">
+                  <div
+                    class="d-flex justify-content-between align-items-center fs-7 fs-md-5 text-primary-100"
+                  >
                     <p class="mb-0 fw-bold">
-                      NT$ {{ room.price }}
+                      NT$ {{ formatToThousand(room.price) }}
                     </p>
                     <NuxtLink
                       :to="`/rooms/${room._id}`"
                       class="icon-link icon-link-hover text-primary-100"
                     >
-                      <Icon
-                        class="bi  fs-5"
-                        icon="mdi:arrow-right"
-                      />
+                      <Icon class="bi fs-5" icon="mdi:arrow-right" />
                     </NuxtLink>
                   </div>
                 </div>
@@ -203,7 +204,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   xxl: 1400px,
-  xxxl: 1537px
+  xxxl: 1537px,
 );
 
 .hero img {
@@ -220,7 +221,7 @@ $grid-breakpoints: (
 .deco-line {
   width: 33vw;
   height: 2px;
-  background-image: linear-gradient(to right, #BE9C7C, #FFFFFF);
+  background-image: linear-gradient(to right, #be9c7c, #ffffff);
 }
 
 .hero .deco-line {
@@ -228,7 +229,7 @@ $grid-breakpoints: (
     width: 2px;
     height: 83px;
     z-index: 1;
-    background-image: linear-gradient(to bottom, #BE9C7C, #FFF);
+    background-image: linear-gradient(to bottom, #be9c7c, #fff);
     margin-bottom: 2.5rem;
   }
 }
@@ -253,8 +254,8 @@ $grid-breakpoints: (
 .swiper :deep(.swiper-button-next) {
   width: 56px;
   height: 56px;
-  background-color: #FFFFFF;
-  color: #4B4B4B;
+  background-color: #ffffff;
+  color: #4b4b4b;
   border-radius: 100px;
 
   @include media-breakpoint-down(md) {
@@ -306,13 +307,13 @@ $grid-breakpoints: (
 .swiper :deep(.swiper-pagination-bullet) {
   width: 32px;
   height: 4px;
-  background-color: #F1EAE4;
+  background-color: #f1eae4;
   border-radius: 100px;
   opacity: 1;
 }
 
 .swiper :deep(.swiper-pagination-bullet-active) {
   width: 60px;
-  background-color: #BF9D7D;
+  background-color: #bf9d7d;
 }
 </style>

@@ -1,11 +1,13 @@
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router';
-// definePageMeta({
-//   middleware:'auth'
-// })
 const route = useRoute()
-console.log(route);
 
+const authStore = useAuthStore()
+const { isLogin,userProfile } = storeToRefs( authStore )
+const { getUserProfile } = authStore
+
+onMounted(()=> {
+  getUserProfile()
+})
 </script>
 
 <template>
@@ -31,7 +33,7 @@ console.log(route);
             alt="avatar"
           >
           <h1 class="text-neutral-0 fw-bold">
-            Hello，Jessica
+            Hello，{{ userProfile.name }}
           </h1>
         </div>
       </div>
