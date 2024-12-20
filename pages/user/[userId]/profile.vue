@@ -27,6 +27,7 @@ const updateFormatDate = computed(() => {
 });
 
 const updateAddress = ref("");
+const passwordFormRef = ref(null);
 const oldPassword = ref("");
 const newPassword = ref("");
 
@@ -40,8 +41,8 @@ const userUpdateProfile = computed(() => {
       zipcode: userProfile.value.address?.zipcode,
       detail: updateAddress.value,
     },
-    oldPassword: oldPassword.value,
-    newPassword: newPassword.value,
+    oldPassword: passwordFormRef.value?.values?.oldPassword,
+    newPassword: passwordFormRef.value?.values?.newPassword,
   };
 });
 
@@ -66,7 +67,7 @@ const editUserProfile = () => {
         class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-6 p-md-10 bg-neutral-0"
       >
         <h2 class="fs-6 fs-md-5 fw-bold">修改密碼</h2>
-        <VForm class="d-flex flex-column gap-4 gap-md-6">
+        <VForm class="d-flex flex-column gap-4 gap-md-6" ref="passwordFormRef">
           <div class="fs-8 fs-md-7">
             <p class="mb-2 text-neutral-80 fw-medium">電子信箱</p>
             <span
@@ -113,10 +114,10 @@ const editUserProfile = () => {
                 type="password"
                 class="form-control p-4 fs-7 rounded-3"
                 placeholder="請輸入舊密碼"
-                name="oldpassword"
+                name="oldPassword"
                 rules="required|min:8"
               />
-              <VErrorMessage class="text-danger" name="oldpassword" />
+              <VErrorMessage class="text-danger" name="oldPassword" />
             </div>
 
             <div>
@@ -146,7 +147,7 @@ const editUserProfile = () => {
                 class="form-control p-4 fs-7 rounded-3"
                 placeholder="請再輸入一次新密碼"
                 name="confirmNewPassword"
-                rules="required|comfirmPassword"
+                rules="required|confirmNewPassword"
               />
               <VErrorMessage class="text-danger" name="confirmNewPassword" />
             </div>

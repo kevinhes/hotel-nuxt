@@ -134,6 +134,9 @@ export const useAuthStore = defineStore("authStore", () => {
 
   // update user
   async function updateUserProfile(userUpdateProfile) {
+    console.log(userUpdateProfile);
+
+    const loader = $loading.show({});
     try {
       const res = await $fetch(`${apiUrl}api/v1/user/`, {
         method: "PUT",
@@ -145,10 +148,21 @@ export const useAuthStore = defineStore("authStore", () => {
         },
       });
       if (res.status === true) {
+        loader.hide();
+        $Swal.fire({
+          icon: "success",
+          title: "更新成功",
+          timer: 1500,
+        });
         getUserProfile();
       }
     } catch (error) {
-      console.log(error.data);
+      loader.hide();
+      $Swal.fire({
+        icon: "warning",
+        title: error.data.message,
+        timer: 1500,
+      });
     }
   }
 

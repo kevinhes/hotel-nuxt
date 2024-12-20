@@ -21,6 +21,16 @@ export default defineNuxtPlugin((nuxtApp) => {
     return true;
   });
 
+  defineRule("confirmNewPassword", (value) => {
+    if (!value) {
+      return "Please confirm your password";
+    }
+    if (value !== oldPassword.value) {
+      return "密碼必須一致";
+    }
+    return true;
+  });
+
   defineRule("username", (value) => {
     const regex = /^[a-zA-Z0-9_]{3,15}$/;
     return (
