@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     apiSecret: '',
     // Keys within public, will be also exposed to the client-side
     public: {
-      apiBase: ''
+      apiBase: 'https://freyja-hthp.onrender.com/'
     }
   }
 })
