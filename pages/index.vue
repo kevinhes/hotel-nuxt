@@ -1,6 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+const { $Swal } = useNuxtApp();
 
 const modules = [Autoplay, Navigation, Pagination];
 const runtimeConfig = useRuntimeConfig();
@@ -23,7 +24,7 @@ const { formatToThousand } = useThousand();
 const { data: newsList, error: newsListError } = await useAsyncData(
   `news-list`,
   async () => {
-    const response = await $fetch(`api/v1/home/news/`, {
+    const response = await $fetch(`api/v1/home/news`, {
       baseURL: apiUrl,
     });
     // console.log(response.value);
@@ -32,8 +33,8 @@ const { data: newsList, error: newsListError } = await useAsyncData(
 );
 
 if (newsListError.value) {
-  alert("發生錯誤 ! ");
-  router.push("/");
+  console.log(newsListError.value.data.message);
+  navigateTo("/");
 }
 
 // 房間細節
@@ -50,10 +51,8 @@ const { data, error } = await useAsyncData(`rooms-list`, async () => {
 });
 
 if (error.value) {
-  console.log(error.value);
-
-  // alert("發生錯誤 ! ");
-  // router.push("/");
+  console.log(error.value.data.message);
+  navigateTo("/");
 }
 
 // 美味佳餚
@@ -68,8 +67,8 @@ const { data: culinaryList, error: culinaryListError } = await useAsyncData(
 );
 
 if (culinaryListError.value) {
-  alert("發生錯誤 ! ");
-  router.push("/");
+  console.log(culinaryListError.value.data.message);
+  navigateTo("/");
 }
 </script>
 
