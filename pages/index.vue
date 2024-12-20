@@ -32,10 +32,10 @@ const { data: newsList, error: newsListError } = await useAsyncData(
   }
 );
 
-if (newsListError.value) {
-  console.log(newsListError.value.data.message);
-  navigateTo("/");
-}
+// if (newsListError.value) {
+//   console.log(newsListError.value.data.message);
+//   navigateTo("/");
+// }
 
 // 房間細節
 const roomsStore = useRoomsStore();
@@ -50,10 +50,10 @@ const { data, error } = await useAsyncData(`rooms-list`, async () => {
   return response;
 });
 
-if (error.value) {
-  console.log(error.value.data.message);
-  navigateTo("/");
-}
+// if (error.value) {
+//   console.log(error.value.data.message);
+//   navigateTo("/");
+// }
 
 // 美味佳餚
 const { data: culinaryList, error: culinaryListError } = await useAsyncData(
@@ -66,10 +66,10 @@ const { data: culinaryList, error: culinaryListError } = await useAsyncData(
   }
 );
 
-if (culinaryListError.value) {
-  console.log(culinaryListError.value.data.message);
-  navigateTo("/");
-}
+// if (culinaryListError.value) {
+//   console.log(culinaryListError.value.data.message);
+//   navigateTo("/");
+// }
 </script>
 
 <template>
