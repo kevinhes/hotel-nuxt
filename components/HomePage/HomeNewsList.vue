@@ -1,4 +1,7 @@
 <script setup>
+const props = defineProps({
+  apiUrl: String,
+});
 // 新聞列表
 const { data: newsList, error: newsListError } = await useAsyncData(
   `news-list`,

@@ -1,38 +1,37 @@
 <script setup>
 const { $Modal } = useNuxtApp();
-import { DatePicker } from 'v-calendar';
-import 'v-calendar/style.css';
-import { useScreens } from 'vue-screen-utils';
-import { Icon } from '@iconify/vue';
+import { DatePicker } from "v-calendar";
+import "v-calendar/style.css";
+import { useScreens } from "vue-screen-utils";
+import { Icon } from "@iconify/vue";
 
 const modal = ref(null);
 
 onMounted(() => {
-  modal.value = new $Modal(document.getElementById('dateModal'));
-})
+  modal.value = new $Modal(document.getElementById("dateModal"));
+});
 
 const openModal = () => {
   modal.value.show();
-}
+};
 
 const closeModal = () => {
   modal.value.hide();
-}
+};
 
 defineExpose({
   openModal,
-  closeModal
-})
+  closeModal,
+});
 
-const emit = defineEmits(['handleDateChange']);
-
+const emit = defineEmits(["handleDateChange"]);
 
 const props = defineProps({
   dateTime: {
     type: Object,
     required: true,
-  }
-})
+  },
+});
 
 const tempDate = reactive({
   date: {
@@ -41,24 +40,24 @@ const tempDate = reactive({
   },
   minDate: props.dateTime.minDate,
   maxDate: props.dateTime.maxDate,
-  key: 0
+  key: 0,
 });
 
 const masks = {
-  title: 'YYYY 年 MM 月',
-  modelValue: 'YYYY-MM-DD'
+  title: "YYYY 年 MM 月",
+  modelValue: "YYYY-MM-DD",
 };
 
 const { mapCurrent } = useScreens({
-  md: '768px',
+  md: "768px",
 });
 
-const rows = mapCurrent({ md: 1}, 2);
-const columns = mapCurrent({ md: 2}, 1);
-const expanded = mapCurrent({ md: false}, true);
-const titlePosition = mapCurrent({ md: 'center'}, 'left');
+const rows = mapCurrent({ md: 1 }, 2);
+const columns = mapCurrent({ md: 2 }, 1);
+const expanded = mapCurrent({ md: false }, true);
+const titlePosition = mapCurrent({ md: "center" }, "left");
 
-const formatDateTitle = (date) => date?.replaceAll('-', ' / ');
+const formatDateTitle = (date) => date?.replaceAll("-", " / ");
 
 const daysCount = computed(() => {
   const startDate = tempDate.date.start;
@@ -66,69 +65,62 @@ const daysCount = computed(() => {
 
   if (startDate === null || endDate === null) return 0;
 
-  const differenceTime = new Date(endDate).getTime() - new Date(startDate).getTime();
+  const differenceTime =
+    new Date(endDate).getTime() - new Date(startDate).getTime();
 
   const differenceDay = Math.round(differenceTime / (1000 * 60 * 60 * 24));
 
   return differenceDay;
-})
+});
 
 const MAX_BOOKING_PEOPLE = 10;
 const bookingPeopleMobile = ref(1);
-
 
 const isConfirmDateOnMobile = ref(false);
 
 const confirmDateOnMobile = () => {
   isConfirmDateOnMobile.value = true;
-}
+};
 
 const confirmDate = () => {
-  const isMobile = mapCurrent({md: false}, true);
+  const isMobile = mapCurrent({ md: false }, true);
 
   if (isMobile.value) {
-    emit('handleDateChange', {
+    emit("handleDateChange", {
       date: tempDate.date,
       people: bookingPeopleMobile,
-      daysCount
+      daysCount,
     });
   } else {
-    emit('handleDateChange', {
+    emit("handleDateChange", {
       date: tempDate.date,
-      daysCount
+      daysCount,
     });
   }
 
   closeModal();
-}
+};
 
 const clearDate = () => {
   tempDate.date.start = null;
   tempDate.date.end = null;
   tempDate.key++;
-}
-
-
+};
 </script>
 
 <template>
-  <div
-    id="dateModal"
-    class="modal fade"
-    tabindex="-1"
-    aria-hidden="true"
-  >
+  <div id="dateModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered m-0 mt-9 mx-md-auto">
       <div
-        :class="{'mt-auto': isConfirmDateOnMobile}"
-        class="modal-content gap-6 gap-md-10 rounded-3xl"
+        :class="{ 'mt-auto': isConfirmDateOnMobile }"
+        class="modal-content gap-6 gap-md-10 rounded-5"
       >
         <div class="d-md-none modal-header px-6 py-4 bg-neutral-40">
           <div class="d-flex flex-column gap-4">
             <button
               type="button"
               class="btn-close"
-              style="margin-left: -8px !important;"
+              style="margin-left: -8px !important"
               @click="closeModal"
             />
             <h3
@@ -137,13 +129,8 @@ const clearDate = () => {
             >
               選擇入住與退房日期
             </h3>
-            <div
-              v-else
-              class="d-flex align-items-center gap-4"
-            >
-              <h3
-                class="modal-title mb-0 text-neutral-100 fs-6 fw-bold"
-              >
+            <div v-else class="d-flex align-items-center gap-4">
+              <h3 class="modal-title mb-0 text-neutral-100 fs-6 fw-bold">
                 {{ daysCount }} 晚
               </h3>
               <div class="d-flex gap-2 text-neutral-80 fs-8 fw-medium">
@@ -156,15 +143,13 @@ const clearDate = () => {
         </div>
         <div class="d-none d-md-flex modal-header gap-15 p-8 pb-0 border-0">
           <div>
-            <h3
-              class="modal-title mb-2 text-neutral-100 fs-5 fw-bold"
-            >
+            <h3 class="modal-title mb-2 text-neutral-100 fs-5 fw-bold">
               {{ daysCount }} 晚
             </h3>
             <div class="d-flex gap-2 text-neutral-80 fw-medium">
-              <span>{{ tempDate.date.start?.replaceAll('-', ' / ') }}</span>
+              <span>{{ tempDate.date.start?.replaceAll("-", " / ") }}</span>
               -
-              <span>{{ tempDate.date.end?.replaceAll('-', ' / ') }}</span>
+              <span>{{ tempDate.date.end?.replaceAll("-", " / ") }}</span>
             </div>
           </div>
 
@@ -176,14 +161,14 @@ const clearDate = () => {
                 type="date"
                 :value="tempDate.date.start"
                 class="form-control p-4 pt-9 text-neutral-100 fw-medium border-neutral-100 rounded-3"
-                style="min-height: 74px;"
+                style="min-height: 74px"
                 placeholder="yyyy-mm-dd"
-              >
+              />
               <label
                 class="text-neutral-80 fw-medium"
-                style="top: 8px;left: 8px;"
+                style="top: 8px; left: 8px"
                 for="checkInDate"
-              >入住
+                >入住
               </label>
             </div>
 
@@ -194,23 +179,20 @@ const clearDate = () => {
                 readonly
                 :value="tempDate.date.end"
                 class="form-control p-4 pt-9 text-neutral-100 fw-medium border-neutral-100 rounded-3"
-                style="min-height: 74px;"
+                style="min-height: 74px"
                 placeholder="yyyy-mm-dd"
-              >
+              />
               <label
                 class="text-neutral-80 fw-medium"
-                style="top: 8px;left: 8px;"
+                style="top: 8px; left: 8px"
                 for="checkoutDate"
-              >退房
+                >退房
               </label>
             </div>
           </div>
         </div>
         <div class="modal-body px-6 px-md-8 py-0">
-          <div
-            v-if="!isConfirmDateOnMobile"
-            class="date-picker"
-          >
+          <div v-if="!isConfirmDateOnMobile" class="date-picker">
             <DatePicker
               :key="tempDate.key"
               v-model.range.string="tempDate.date"
@@ -228,30 +210,25 @@ const clearDate = () => {
           </div>
 
           <div v-else>
-            <h6 class="mb-1 text-neutral-100 fw-bold">
-              選擇人數
-            </h6>
+            <h6 class="mb-1 text-neutral-100 fw-bold">選擇人數</h6>
             <p className="mb-4 text-neutral-80 fs-8 fw-medium">
               此房型最多供 4 人居住，不接受寵物入住。
             </p>
 
             <div class="d-flex align-items-center gap-4">
               <button
-                :class="{'disabled bg-neutral-40': bookingPeopleMobile === 1}"
+                :class="{ 'disabled bg-neutral-40': bookingPeopleMobile === 1 }"
                 class="btn btn-neutral-0 p-4 border border-neutral-40 rounded-circle"
                 type="button"
                 @click="bookingPeopleMobile--"
               >
-                <Icon
-                  class="fs-5 text-neutral-100"
-                  icon="ic:baseline-minus"
-                />
+                <Icon class="fs-5 text-neutral-100" icon="ic:baseline-minus" />
               </button>
 
               <h6
                 id="people"
                 class="d-flex justify-content-center align-items-center mb-0 fw-bold text-neutral-100"
-                style="width: 24px;"
+                style="width: 24px"
                 name="people"
               >
                 {{ bookingPeopleMobile }}
@@ -260,24 +237,18 @@ const clearDate = () => {
               <button
                 :class="{
                   'disabled bg-neutral-40':
-                    bookingPeopleMobile ===
-                    MAX_BOOKING_PEOPLE
+                    bookingPeopleMobile === MAX_BOOKING_PEOPLE,
                 }"
                 class="btn btn-neutral-0 p-4 border border-neutral-40 rounded-circle"
                 type="button"
                 @click="bookingPeopleMobile++"
               >
-                <Icon
-                  class="fs-5 text-neutral-100"
-                  icon="ic:baseline-plus"
-                />
+                <Icon class="fs-5 text-neutral-100" icon="ic:baseline-plus" />
               </button>
             </div>
           </div>
         </div>
-        <div
-          class="d-none d-md-flex modal-footer p-3 p-md-8 pt-0 border-0"
-        >
+        <div class="d-none d-md-flex modal-footer p-3 p-md-8 pt-0 border-0">
           <button
             type="button"
             class="btn btn-outline-neutral-80 flex-grow-1 flex-md-grow-0 p-4 fw-bold border-0 rounded-3"
@@ -293,10 +264,8 @@ const clearDate = () => {
             確定日期
           </button>
         </div>
-        
-        <div
-          class="d-md-none modal-footer p-3 p-md-8 pt-0 border-0"
-        >
+
+        <div class="d-md-none modal-footer p-3 p-md-8 pt-0 border-0">
           <template v-if="isConfirmDateOnMobile">
             <button
               type="button"
@@ -334,7 +303,6 @@ const clearDate = () => {
     </div>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 .modal {

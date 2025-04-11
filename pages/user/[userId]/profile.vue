@@ -64,7 +64,7 @@ const editUserProfile = () => {
   <div class="row gap-6 gap-md-0">
     <div class="col-12 col-md-5">
       <section
-        class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-6 p-md-10 bg-neutral-0"
+        class="rounded-5 d-flex flex-column gap-6 gap-md-10 p-6 p-md-10 bg-neutral-0"
       >
         <h2 class="fs-6 fs-md-5 fw-bold">修改密碼</h2>
         <VForm class="d-flex flex-column gap-4 gap-md-6" ref="passwordFormRef">
@@ -167,7 +167,7 @@ const editUserProfile = () => {
 
     <div class="col-12 col-md-7">
       <section
-        class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-6 p-md-10 bg-neutral-0"
+        class="rounded-5 d-flex flex-column gap-6 gap-md-10 p-6 p-md-10 bg-neutral-0"
       >
         <h2 class="fs-6 fs-md-5 fw-bold">基本資料</h2>
         <div class="d-flex flex-column gap-4 gap-md-6">
@@ -335,10 +335,6 @@ const editUserProfile = () => {
 </template>
 
 <style lang="scss" scoped>
-.rounded-3xl {
-  border-radius: 1.25rem;
-}
-
 input[type="password"] {
   font: small-caption;
 }

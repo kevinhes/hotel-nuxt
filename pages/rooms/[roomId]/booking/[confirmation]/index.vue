@@ -94,7 +94,7 @@ if (error.value) {
 
         <div class="col-12 col-md-5">
           <div
-            class="rounded-3xl d-flex flex-column gap-6 gap-md-10 p-4 p-md-10 mx-auto ms-md-auto bg-neutral-0"
+            class="rounded-5 d-flex flex-column gap-6 gap-md-10 p-4 p-md-10 mx-auto ms-md-auto bg-neutral-0"
             style="max-width: 478px"
           >
             <div>
@@ -221,10 +221,6 @@ $grid-breakpoints: (
   xxl: 1400px,
   xxxl: 1537px,
 );
-
-.rounded-3xl {
-  border-radius: 1.25rem;
-}
 
 .title-deco {
   display: flex;
