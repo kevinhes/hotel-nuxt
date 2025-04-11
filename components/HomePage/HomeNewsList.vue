@@ -1,7 +1,15 @@
 <script setup>
-const props = defineProps({
-  newsList: Array,
-});
+// 新聞列表
+const { data: newsList, error: newsListError } = await useAsyncData(
+  `news-list`,
+  async () => {
+    const response = await $fetch(`api/v1/home/news`, {
+      baseURL: props.apiUrl,
+    });
+    // console.log(response.value);
+    return response.result;
+  }
+);
 </script>
 <template>
   <section class="news bg-primary-10 py-20 py-md-30">
