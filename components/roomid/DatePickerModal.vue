@@ -82,6 +82,7 @@ const confirmDateOnMobile = () => {
   isConfirmDateOnMobile.value = true;
 };
 
+// 確認日期
 const confirmDate = () => {
   const isMobile = mapCurrent({ md: false }, true);
 
