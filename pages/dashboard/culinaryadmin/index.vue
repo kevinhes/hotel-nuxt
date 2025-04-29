@@ -1,85 +1,80 @@
 <script setup>
-  const runtimeConfig = useRuntimeConfig();
-  const apiUrl = runtimeConfig.public.apiBase;
-  const authCookie = useCookie('auth');
+const runtimeConfig = useRuntimeConfig();
+const apiUrl = runtimeConfig.public.apiBase;
+const authCookie = useCookie("auth");
 
-  import {useLoading} from 'vue-loading-overlay'
-  const $loading = useLoading({});
-  
+import { useLoading } from "vue-loading-overlay";
+const $loading = useLoading({});
 
-  const culinaryList = ref([]);
+const culinaryList = ref([]);
 
-  async function getCulinaryList() {
-    const loader = $loading.show({})
-    try {
-      const response = await $fetch('api/v1/admin/culinary', {
-        baseURL:apiUrl,
-        headers: {
-          authorization:authCookie.value
-        }
-      })
-      console.log(response);
-      
-      if ( response.status === true ) {
-        culinaryList.value = response.result;
-      }
-      
-    } catch (error) {
-      console.log(error.data);
-    } finally {
-      loader.hide()
+async function getCulinaryList() {
+  const loader = $loading.show({});
+  try {
+    const response = await $fetch("api/v1/admin/culinary", {
+      baseURL: apiUrl,
+      headers: {
+        authorization: authCookie.value,
+      },
+    });
+
+    if (response.status === true) {
+      culinaryList.value = response.result;
     }
+  } catch (error) {
+    console.log(error.data);
+  } finally {
+    loader.hide();
   }
+}
 
-  async function deleteCulinary(id) {
-    try {
-      const response = await $fetch(`api/v1/admin/culinary/${id}`, {
-        method:'DELETE',
-        baseURL:apiUrl,
-        headers: {
-          authorization:authCookie.value
-        }
-      })
-      getCulinaryList()
-      
-    } catch (error) {
-      console.log(error.data);
-    }
+async function deleteCulinary(id) {
+  try {
+    const response = await $fetch(`api/v1/admin/culinary/${id}`, {
+      method: "DELETE",
+      baseURL: apiUrl,
+      headers: {
+        authorization: authCookie.value,
+      },
+    });
+    getCulinaryList();
+  } catch (error) {
+    console.log(error.data);
   }
+}
 
-  async function editCulinary(id, title, description, diningTime,image) {
-    try {
-      const response = await $fetch(`api/v1/admin/culinary/${id}`, {
-        method:'PUT',
-        baseURL:apiUrl,
-        headers: {
-          authorization:authCookie.value
-        },
-        body: {
-          title,
-          description,
-          diningTime,
-          image
-        }
-      })
-      
-      getCulinaryList()
-      
-    } catch (error) {
-      console.log(error.data);
-    }
+async function editCulinary(id, title, description, diningTime, image) {
+  try {
+    const response = await $fetch(`api/v1/admin/culinary/${id}`, {
+      method: "PUT",
+      baseURL: apiUrl,
+      headers: {
+        authorization: authCookie.value,
+      },
+      body: {
+        title,
+        description,
+        diningTime,
+        image,
+      },
+    });
+
+    getCulinaryList();
+  } catch (error) {
+    console.log(error.data);
   }
+}
 
-  onMounted(() => {
-    getCulinaryList()
-  })
+onMounted(() => {
+  getCulinaryList();
+});
 </script>
 <template>
   <section class="d-flex justify-content-between">
-    <h1>
-      管理佳餚
-    </h1>
-    <nuxt-link class="btn btn-primary" to="culinaryadmin/addcuilnary">新增佳餚</nuxt-link>
+    <h1>管理佳餚</h1>
+    <nuxt-link class="btn btn-primary" to="culinaryadmin/addcuilnary"
+      >新增佳餚</nuxt-link
+    >
   </section>
   <section v-if="culinaryList">
     <table class="table">
@@ -95,26 +90,43 @@
       <tbody>
         <tr v-for="culinary in culinaryList" :key="culinary.id">
           <td>
-            <input class="form-control" type="text" v-model="culinary.title">
+            <input class="form-control" type="text" v-model="culinary.title" />
           </td>
           <td>
-            <textarea class="form-control" v-model="culinary.description"></textarea>
+            <textarea
+              class="form-control"
+              v-model="culinary.description"
+            ></textarea>
           </td>
           <td>
-            <input class="form-control" type="text" v-model="culinary.diningTime">
+            <input
+              class="form-control"
+              type="text"
+              v-model="culinary.diningTime"
+            />
           </td>
           <td>
-            <input type="text" v-model="culinary.image" class="form-control">
+            <input type="text" v-model="culinary.image" class="form-control" />
           </td>
           <td>
-            <button 
-              type="button" class="btn btn-primary"
-              @click="editCulinary(culinary._id, culinary.title, culinary.description, culinary.diningTime,culinary.image)"
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="
+                editCulinary(
+                  culinary._id,
+                  culinary.title,
+                  culinary.description,
+                  culinary.diningTime,
+                  culinary.image
+                )
+              "
             >
               更新
             </button>
-            <button 
-              type="button" class="btn btn-danger"
+            <button
+              type="button"
+              class="btn btn-danger"
               @click="deleteCulinary(culinary._id)"
             >
               刪除
@@ -124,8 +136,6 @@
       </tbody>
     </table>
   </section>
-  <section v-else>
-    沒有資料
-  </section>
+  <section v-else>沒有資料</section>
 </template>
 <style scoped></style>

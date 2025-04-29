@@ -5,6 +5,7 @@ import "v-calendar/style.css";
 import { useScreens } from "vue-screen-utils";
 import { Icon } from "@iconify/vue";
 
+// modal
 const modal = ref(null);
 
 onMounted(() => {
@@ -19,6 +20,7 @@ const closeModal = () => {
   modal.value.hide();
 };
 
+// 讓 modal 可以被外部使用
 defineExpose({
   openModal,
   closeModal,

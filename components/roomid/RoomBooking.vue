@@ -12,7 +12,6 @@ const props = defineProps({
   openModal: Function,
 });
 const { formatToThousand } = useThousand();
-console.log("roomDetail", props.roomDetail);
 </script>
 <template>
   <div class="d-none d-md-block col-md-5">
